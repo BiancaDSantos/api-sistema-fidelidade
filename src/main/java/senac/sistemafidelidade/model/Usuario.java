@@ -1,9 +1,8 @@
 package senac.sistemafidelidade.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,8 +23,15 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message = "O nome é obrigatório")
+    @Column(nullable = false)
     private String nome;
+
+    @Email(message = "O e-mail deve ser válido")
+    @NotBlank(message = "O e-mail é obrigatório")
     private String email;
+
+    @NotBlank(message = "A senha é obrigatória")
     private String senha;
 
     private String role;

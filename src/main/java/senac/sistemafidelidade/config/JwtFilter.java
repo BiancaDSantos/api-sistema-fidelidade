@@ -21,7 +21,11 @@ public class JwtFilter extends OncePerRequestFilter {
     private TokenService tokenService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
 
         String path = request.getRequestURI();
 
@@ -45,22 +49,21 @@ public class JwtFilter extends OncePerRequestFilter {
                 var autorizacao = new UsernamePasswordAuthenticationToken(
                         user,
                         null,
-                        Collections.emptyList());
+                        Collections.emptyList()
+                );
 
                 SecurityContextHolder.getContext().setAuthentication(autorizacao);
 
                 filterChain.doFilter(request,response);
 
-            }else{
+            } else {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Token não informado!");
-                return;
             }
 
-        }catch(Exception e){
+        } catch(Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Token não informado!");
-            return;
         }
     }
 }
