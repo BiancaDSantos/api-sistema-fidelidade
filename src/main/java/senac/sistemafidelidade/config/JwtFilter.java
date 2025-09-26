@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import senac.sistemafidelidade.repository.UsuarioRepository;
 import senac.sistemafidelidade.service.TokenService;
 
 import java.io.IOException;
@@ -20,6 +21,9 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -27,43 +31,35 @@ public class JwtFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String path = request.getRequestURI();
+        String token = this.recoverToken(request);
 
-        if(path.equals("/auth/login")
-                || path.startsWith("/swagger-resources")
-                || path.startsWith("/v3/api-docs")
-                || path.startsWith("/webjars")
-                || path.startsWith("/swagger-ui")){
+        if (token != null) {
+            try {
+                String login = tokenService.validarToken(token);
 
-            filterChain.doFilter(request,response);
-            return;
-        }
+                if (!login.isEmpty()) {
+                    usuarioRepository.findByEmail(login).ifPresent(usuario -> {
+                        UsernamePasswordAuthenticationToken authentication =
+                                new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    });
+                }
 
-        try{
-            String header = request.getHeader("Authorization");
-
-            if(header!= null && header.startsWith("Bearer ")){
-                String token = header.replace("Bearer ", "");
-                String user = tokenService.validarToken(token);
-
-                var autorizacao = new UsernamePasswordAuthenticationToken(
-                        user,
-                        null,
-                        Collections.emptyList()
-                );
-
-                SecurityContextHolder.getContext().setAuthentication(autorizacao);
-
-                filterChain.doFilter(request,response);
-
-            } else {
+            } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Token não informado!");
+                response.getWriter().write("Invalid or expired token");
+                return;
             }
-
-        } catch(Exception e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Token não informado!");
         }
+
+        filterChain.doFilter(request, response);
+    }
+
+    private String recoverToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return null;
+        }
+        return authHeader.replace("Bearer ", "");
     }
 }

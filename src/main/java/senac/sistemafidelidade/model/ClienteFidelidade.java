@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Entity(name = "clientefidelidade")
 @NoArgsConstructor
+@Builder
 public class ClienteFidelidade {
 
     @Id

@@ -1,6 +1,5 @@
 package senac.sistemafidelidade.service;
 
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -35,9 +34,10 @@ public class TokenService {
                     .withExpiresAt(gerarDataExpiracao())
                     .sign(algorithm);
 
-            tokenRepository.save(new Token(null, token, usuario.getUsername()));
+            tokenRepository.save(new Token(null, token, usuario));
 
             return token;
+            
         } catch (Exception e) {
             throw new RuntimeException("Erro ao gerar token JWT", e);
         }
@@ -57,6 +57,7 @@ public class TokenService {
     }
 
     private Instant gerarDataExpiracao() {
+        
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }
 }

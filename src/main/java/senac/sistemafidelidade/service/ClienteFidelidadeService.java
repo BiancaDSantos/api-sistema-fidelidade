@@ -1,13 +1,14 @@
 package senac.sistemafidelidade.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import senac.sistemafidelidade.dto.ClienteFidelidadeDTO;
-import java.util.List;
-import senac.sistemafidelidade.dto.ClienteFidelidadeDTO.*;
 import senac.sistemafidelidade.model.ClienteFidelidade;
 import senac.sistemafidelidade.repository.ClienteFidelidadeRepository;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -15,100 +16,40 @@ public class ClienteFidelidadeService {
 
     private final ClienteFidelidadeRepository clienteRepository;
 
-    @Transactional
-    public ClienteFidelidadeDTO.ClienteResponse criarCliente(ClienteFidelidadeDTO.CriarClienteRequest request) {
 
-        if (clienteRepository.existsByEmail(request.email())) {
-            throw new RuntimeException("Já existe um cliente com o email: " + request.email());
-        }
+    public ClienteFidelidade criarCliente(ClienteFidelidadeDTO.CriarClienteRequest request) {
 
-        ClienteFidelidade cliente = new ClienteFidelidade();
-        cliente.setNome(request.nome());
-        cliente.setEmail(request.email());
-        cliente.setPontos(request.pontos());
+        if (clienteRepository.existsByEmail(request.email())) throw new RuntimeException("Login já existente");
 
-        cliente = clienteRepository.save(cliente);
-        return toResponse(cliente);
+        ClienteFidelidade cliente = request.transformaEmModel();
+
+        return clienteRepository.save(cliente);
     }
 
-    public List<ClienteFidelidadeDTO.ClienteResponse> listarClientes() {
-        return clienteRepository.findAll().stream()
-                .map(this::toResponse)
-                .toList();
+    public List<ClienteFidelidade> listarClientes() {
+        return clienteRepository.findAll();
     }
 
-    public ClienteFidelidadeDTO.ClienteResponse buscarClientePorId(Long id) {
-        ClienteFidelidade cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado com ID: " + id));
-        return toResponse(cliente);
+    public ClienteFidelidade buscarClientePorId(Long id) {
+        return clienteRepository.findById(id).orElseThrow(() -> new RuntimeException("Id não encontrado"));
     }
 
     @Transactional
-    public ClienteFidelidadeDTO.ClienteResponse adicionarPontos(ClienteFidelidadeDTO.OperacaoPontosRequest request) {
-        if (request.pontos() <= 0) {
-            throw new RuntimeException("A quantidade de pontos deve ser maior que zero");
-        }
+    public ClienteFidelidade adicionarPontos(ClienteFidelidadeDTO.OperacaoPontosRequest request) {
+        ClienteFidelidade cliente = clienteRepository.findAndLockById(request.clienteId())
+                .orElseThrow(() -> new RuntimeException("Id não encontrado"));
 
-        int linhasAfetadas = clienteRepository.adicionarPontosAtomicamente(
-                request.clienteId(),
-                request.pontos()
-        );
-
-        if (linhasAfetadas == 0) {
-            throw new RuntimeException("Cliente não encontrado com ID: " + request.clienteId());
-        }
-
-        ClienteFidelidade cliente = clienteRepository.findById(request.clienteId())
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado após operação"));
-
-        return toResponse(cliente);
+        cliente.setPontos(cliente.getPontos() + request.pontos());
+        return clienteRepository.save(cliente);
     }
 
-    @Transactional
-    public ClienteFidelidadeDTO.ClienteResponse resgatarPontos(ClienteFidelidadeDTO.OperacaoPontosRequest request) {
-        if (request.pontos() <= 0) {
-            throw new RuntimeException("A quantidade de pontos deve ser maior que zero");
-        }
+    public ClienteFidelidade resgatarPontos(ClienteFidelidadeDTO.@Valid OperacaoPontosRequest request) {
+        ClienteFidelidade cliente = clienteRepository.findAndLockById(request.clienteId())
+                .orElseThrow(() -> new RuntimeException("Id não encontrado"));
 
-        int linhasAfetadas = clienteRepository.resgatarPontosSeSaldoSuficiente(
-                request.clienteId(),
-                request.pontos()
-        );
+        if(cliente.getPontos() < request.pontos()) throw new RuntimeException("Gastando mais que tem");
 
-        if (linhasAfetadas == 0) {
-            Integer saldoAtual = clienteRepository.findPontosByClienteId(request.clienteId())
-                    .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
-
-            throw new RuntimeException(
-                    "Saldo de pontos insuficiente. Saldo atual: " + saldoAtual +
-                            ", Tentativa de resgate: " + request.pontos()
-            );
-        }
-
-        ClienteFidelidade cliente = clienteRepository.findById(request.clienteId())
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado após operação"));
-
-        return toResponse(cliente);
-    }
-
-    public ClienteFidelidadeDTO.SaldoResponse consultarSaldo(Long clienteId) {
-        ClienteFidelidade cliente = clienteRepository.findById(clienteId)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado com ID: " + clienteId));
-
-        return new ClienteFidelidadeDTO.SaldoResponse(
-                cliente.getId(),
-                cliente.getNome(),
-                cliente.getEmail(),
-                cliente.getPontos()
-        );
-    }
-
-    private ClienteFidelidadeDTO.ClienteResponse toResponse(ClienteFidelidade cliente) {
-        return new ClienteFidelidadeDTO.ClienteResponse(
-                cliente.getId(),
-                cliente.getNome(),
-                cliente.getEmail(),
-                cliente.getPontos()
-        );
+        cliente.setPontos(cliente.getPontos() - request.pontos());
+        return clienteRepository.save(cliente);
     }
 }

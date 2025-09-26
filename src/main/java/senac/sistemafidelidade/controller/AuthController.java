@@ -2,16 +2,17 @@ package senac.sistemafidelidade.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import senac.sistemafidelidade.dto.LoginRequestDto;
+import senac.sistemafidelidade.dto.LoginResponseDTO;
 import senac.sistemafidelidade.model.Usuario;
 import senac.sistemafidelidade.service.TokenService;
 
@@ -28,7 +29,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "Realiza o login do usuário", description = "Autentica o usuário com email e senha e retorna um token JWT em caso de sucesso.")
-    public ResponseEntity<String> login(@RequestBody LoginRequestDto request) {
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDto request) {
         try {
             var authenticationToken = new UsernamePasswordAuthenticationToken(request.email(), request.senha());
             Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
@@ -36,9 +37,14 @@ public class AuthController {
             var usuario = (Usuario) authentication.getPrincipal();
             String token = tokenService.gerarToken(usuario);
 
-            return ResponseEntity.ok(token);
+            var loginResponse = new LoginResponseDTO(token);
+
+            return ResponseEntity.ok(loginResponse);
+
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
-            return ResponseEntity.status(401).body("Falha na autenticação: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
