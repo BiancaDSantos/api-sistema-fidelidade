@@ -15,6 +15,7 @@ import senac.sistemafidelidade.dto.LoginRequestDto;
 import senac.sistemafidelidade.dto.LoginResponseDTO;
 import senac.sistemafidelidade.model.Usuario;
 import senac.sistemafidelidade.service.TokenService;
+import senac.sistemafidelidade.service.UsuarioService;
 
 @RestController
 @RequestMapping("/auth")
@@ -22,19 +23,19 @@ import senac.sistemafidelidade.service.TokenService;
 public class AuthController {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private TokenService tokenService;
 
     @Autowired
-    private TokenService tokenService;
+    private UsuarioService usuarioService;
 
     @PostMapping("/login")
     @Operation(summary = "Realiza o login do usuário", description = "Autentica o usuário com email e senha e retorna um token JWT em caso de sucesso.")
     public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDto request) {
         try {
-            var authenticationToken = new UsernamePasswordAuthenticationToken(request.email(), request.senha());
-            Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
-
-            var usuario = (Usuario) authentication.getPrincipal();
+            if(!usuarioService.validarSenha(request)){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            var usuario = usuarioService.getUsuarioByLogin(request);
             String token = tokenService.gerarToken(usuario);
 
             var loginResponse = new LoginResponseDTO(token);
