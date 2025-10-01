@@ -35,16 +35,17 @@ public class ClienteFidelidadeService {
     }
 
     @Transactional
-    public ClienteFidelidade adicionarPontos(ClienteFidelidadeDTO.OperacaoPontosRequest request) {
-        ClienteFidelidade cliente = clienteRepository.findAndLockById(request.clienteId())
+    public ClienteFidelidade adicionarPontos(Long id, ClienteFidelidadeDTO.OperacaoPontosRequest request) {
+        ClienteFidelidade cliente = clienteRepository.findAndLockById(id)
                 .orElseThrow(() -> new RuntimeException("Id não encontrado"));
 
         cliente.setPontos(cliente.getPontos() + request.pontos());
         return clienteRepository.save(cliente);
     }
 
-    public ClienteFidelidade resgatarPontos(ClienteFidelidadeDTO.@Valid OperacaoPontosRequest request) {
-        ClienteFidelidade cliente = clienteRepository.findAndLockById(request.clienteId())
+    @Transactional
+    public ClienteFidelidade resgatarPontos(Long id, ClienteFidelidadeDTO.@Valid OperacaoPontosRequest request) {
+        ClienteFidelidade cliente = clienteRepository.findAndLockById(id)
                 .orElseThrow(() -> new RuntimeException("Id não encontrado"));
 
         if(cliente.getPontos() < request.pontos()) throw new RuntimeException("Gastando mais que tem");

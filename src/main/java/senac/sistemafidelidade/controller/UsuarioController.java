@@ -9,8 +9,8 @@ import senac.sistemafidelidade.model.Usuario;
 import senac.sistemafidelidade.repository.UsuarioRepository;
 
 @RestController
-@RequestMapping("/usuarios")
-@Tag(name = "Usuários", description = "Endpoints para o gerenciamento de usuários do sistema.")
+@RequestMapping("/usuario")
+@Tag(name = "Usuário", description = "Endpoints para o gerenciamento de usuários do sistema.")
 public class UsuarioController {
 
     @Autowired

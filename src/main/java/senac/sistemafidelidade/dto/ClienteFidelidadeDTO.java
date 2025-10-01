@@ -1,10 +1,7 @@
 package senac.sistemafidelidade.dto;
 
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import senac.sistemafidelidade.model.ClienteFidelidade;
 
 import java.util.List;
@@ -21,7 +18,7 @@ public interface ClienteFidelidadeDTO {
             String email,
 
             @NotNull(message = "Pontos não podem ser nulos")
-            @Positive(message = "Pontos devem ser positivos")
+            @PositiveOrZero(message = "Pontos devem ser maior ou igual a zero")
             Integer pontos
 
     ) {
@@ -59,9 +56,6 @@ public interface ClienteFidelidadeDTO {
     }
 
     record OperacaoPontosRequest(
-
-            @NotNull(message = "ID do cliente é obrigatório")
-            Long clienteId,
 
             @NotNull(message = "Quantidade de pontos é obrigatória")
             @Positive(message = "Pontos devem ser maiores que zero")

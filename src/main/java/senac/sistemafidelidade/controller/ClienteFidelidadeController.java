@@ -10,7 +10,7 @@ import senac.sistemafidelidade.service.ClienteFidelidadeService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping("/cliente")
 @RequiredArgsConstructor
 public class ClienteFidelidadeController {
 
@@ -40,18 +40,20 @@ public class ClienteFidelidadeController {
         return ResponseEntity.ok(new ClienteFidelidadeDTO.ClienteResponse(clienteService.buscarClientePorId(id)));
     }
 
-    @PostMapping("/adicionar-pontos")
+    @PostMapping("/{id}/adicionar")
     public ResponseEntity<ClienteFidelidadeDTO.ClienteResponse> adicionarPontos(
+            @PathVariable Long id,
             @Valid @RequestBody ClienteFidelidadeDTO.OperacaoPontosRequest request
     ) {
-        return ResponseEntity.ok(new ClienteFidelidadeDTO.ClienteResponse(clienteService.adicionarPontos(request)));
+        return ResponseEntity.ok(new ClienteFidelidadeDTO.ClienteResponse(clienteService.adicionarPontos(id, request)));
     }
 
-    @PostMapping("/resgatar-pontos")
+    @PostMapping("/{id}/resgatar")
     public ResponseEntity<ClienteFidelidadeDTO.ClienteResponse> resgatarPontos(
+            @PathVariable Long id,
             @Valid @RequestBody ClienteFidelidadeDTO.OperacaoPontosRequest request
     ) {
-        return ResponseEntity.ok(new ClienteFidelidadeDTO.ClienteResponse(clienteService.resgatarPontos(request)));
+        return ResponseEntity.ok(new ClienteFidelidadeDTO.ClienteResponse(clienteService.resgatarPontos(id, request)));
     }
 
 }
