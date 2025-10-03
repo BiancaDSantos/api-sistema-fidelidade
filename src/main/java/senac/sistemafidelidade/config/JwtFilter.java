@@ -13,7 +13,6 @@ import senac.sistemafidelidade.repository.UsuarioRepository;
 import senac.sistemafidelidade.service.TokenService;
 
 import java.io.IOException;
-import java.util.Collections;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -40,7 +39,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 if (!login.isEmpty()) {
                     usuarioRepository.findByEmail(login).ifPresent(usuario -> {
                         UsernamePasswordAuthenticationToken authentication =
-                                new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+                                new UsernamePasswordAuthenticationToken(
+                                        usuario, null, usuario.getAuthorities()
+                                );
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     });
                 }

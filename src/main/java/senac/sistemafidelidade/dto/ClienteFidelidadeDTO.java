@@ -1,6 +1,5 @@
 package senac.sistemafidelidade.dto;
 
-
 import jakarta.validation.constraints.*;
 import senac.sistemafidelidade.model.ClienteFidelidade;
 

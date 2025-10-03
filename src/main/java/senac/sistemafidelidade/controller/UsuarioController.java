@@ -10,15 +10,21 @@ import senac.sistemafidelidade.repository.UsuarioRepository;
 
 @RestController
 @RequestMapping("/usuario")
-@Tag(name = "Usuário", description = "Endpoints para o gerenciamento de usuários do sistema.")
+@Tag(
+        name = "Usuário",
+        description = "Endpoints para o gerenciamento de usuários do sistema."
+)
 public class UsuarioController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
 
     @GetMapping("/{id}")
-    @Operation(summary = "Busca um usuário por ID", description = "Retorna os detalhes de um usuário específico com base no seu ID.")
-    public ResponseEntity<Usuario> consultaPorId(@PathVariable Integer id) { // Alterado para Integer
+    @Operation(
+            summary = "Busca um usuário por ID",
+            description = "Retorna os detalhes de um usuário específico com base no seu ID."
+    )
+    public ResponseEntity<Usuario> consultaPorId(@PathVariable Integer id) {
         var usuario = usuarioRepository.findById(id).orElse(null);
 
         if (usuario == null) {
@@ -29,14 +35,21 @@ public class UsuarioController {
     }
 
     @GetMapping
-    @Operation(summary = "Lista todos os usuários", description = "Retorna uma lista com todos os usuários cadastrados no sistema.")
-    public ResponseEntity<?> consultaTodos(){
+    @Operation(
+            summary = "Lista todos os usuários",
+            description = "Retorna uma lista com todos os usuários cadastrados no sistema."
+    )
+    public ResponseEntity<?> consultaTodos() {
+
         return ResponseEntity.ok(usuarioRepository.findAll());
     }
 
     @PostMapping
-    @Operation(summary = "Cadastra um novo usuário", description = "Cria um novo registro de usuário no banco de dados.")
-    public ResponseEntity<?> salvaUsuario(@RequestBody Usuario usuario){
+    @Operation(
+            summary = "Cadastra um novo usuário",
+            description = "Cria um novo registro de usuário no banco de dados."
+    )
+    public ResponseEntity<?> salvaUsuario(@RequestBody Usuario usuario) {
         try{
             var usuarioResponse = usuarioRepository.save(usuario);
 

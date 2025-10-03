@@ -20,7 +20,10 @@ public class ClienteFidelidadeController {
     public ResponseEntity<ClienteFidelidadeDTO.ClienteResponse> criarCliente(
             @Valid @RequestBody ClienteFidelidadeDTO.CriarClienteRequest request
     ) {
-        return ResponseEntity.ok(new ClienteFidelidadeDTO.ClienteResponse(clienteService.criarCliente(request)));
+        return ResponseEntity.ok(
+                new ClienteFidelidadeDTO.ClienteResponse(
+                        clienteService.criarCliente(request))
+        );
     }
 
     @GetMapping
@@ -37,7 +40,10 @@ public class ClienteFidelidadeController {
     public ResponseEntity<ClienteFidelidadeDTO.ClienteResponse> buscarCliente(
             @PathVariable Long id
     ) {
-        return ResponseEntity.ok(new ClienteFidelidadeDTO.ClienteResponse(clienteService.buscarClientePorId(id)));
+        return ResponseEntity.ok(
+                new ClienteFidelidadeDTO.ClienteResponse(
+                        clienteService.buscarClientePorId(id))
+        );
     }
 
     @PostMapping("/{id}/adicionar")
@@ -45,7 +51,10 @@ public class ClienteFidelidadeController {
             @PathVariable Long id,
             @Valid @RequestBody ClienteFidelidadeDTO.OperacaoPontosRequest request
     ) {
-        return ResponseEntity.ok(new ClienteFidelidadeDTO.ClienteResponse(clienteService.adicionarPontos(id, request)));
+        return ResponseEntity.ok(
+                new ClienteFidelidadeDTO.ClienteResponse(
+                        clienteService.adicionarPontos(id, request))
+        );
     }
 
     @PostMapping("/{id}/resgatar")
@@ -53,7 +62,10 @@ public class ClienteFidelidadeController {
             @PathVariable Long id,
             @Valid @RequestBody ClienteFidelidadeDTO.OperacaoPontosRequest request
     ) {
-        return ResponseEntity.ok(new ClienteFidelidadeDTO.ClienteResponse(clienteService.resgatarPontos(id, request)));
+        return ResponseEntity.ok(
+                new ClienteFidelidadeDTO.ClienteResponse(
+                        clienteService.resgatarPontos(id, request))
+        );
     }
 
 }
