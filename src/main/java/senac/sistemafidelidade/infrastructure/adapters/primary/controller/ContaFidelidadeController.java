@@ -1,23 +1,23 @@
-package senac.sistemafidelidade.controller;
+package senac.sistemafidelidade.infrastructure.adapters.primary.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import senac.sistemafidelidade.dto.ClienteFidelidadeDTO;
+import senac.sistemafidelidade.infrastructure.adapters.primary.dto.ClienteFidelidadeDTO;
 import senac.sistemafidelidade.service.ClienteFidelidadeService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/cliente")
+@RequestMapping("/conta_fidelidade_cliente")
 @RequiredArgsConstructor
-public class ClienteFidelidadeController {
+public class ContaFidelidadeController {
 
     private final ClienteFidelidadeService clienteService;
 
     @PostMapping
-    public ResponseEntity<ClienteFidelidadeDTO.ClienteResponse> criarCliente(
+    public ResponseEntity<ClienteFidelidadeDTO.CriarClienteRequest> criarCliente(
             @Valid @RequestBody ClienteFidelidadeDTO.CriarClienteRequest request
     ) {
         return ResponseEntity.ok(

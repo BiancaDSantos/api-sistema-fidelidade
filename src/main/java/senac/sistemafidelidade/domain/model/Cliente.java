@@ -1,16 +1,15 @@
-package senac.sistemafidelidade.model;
+package senac.sistemafidelidade.domain.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@Entity(name = "clientefidelidade")
-@NoArgsConstructor
+@Entity(name = "cliente")
+@Data
 @Builder
-public class ClienteFidelidade {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +25,5 @@ public class ClienteFidelidade {
     @NotBlank(message = "O e-mail deve ser preenchido")
     @Column(nullable = false, unique = true, length = 100)
     private String email;
-
-    @NotNull(message = "Os pontos não podem ser nulo")
-    @PositiveOrZero(message = "Apenas valores positivo ou zero")
-    private Integer pontos;
 
 }

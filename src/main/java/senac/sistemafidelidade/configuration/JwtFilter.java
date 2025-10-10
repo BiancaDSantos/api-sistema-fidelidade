@@ -1,4 +1,4 @@
-package senac.sistemafidelidade.config;
+package senac.sistemafidelidade.configuration;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,8 +9,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import senac.sistemafidelidade.repository.UsuarioRepository;
-import senac.sistemafidelidade.service.TokenService;
+import senac.sistemafidelidade.domain.repository.UsuarioRepository;
+import senac.sistemafidelidade.application.service.TokenService;
 
 import java.io.IOException;
 

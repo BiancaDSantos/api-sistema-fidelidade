@@ -1,4 +1,4 @@
-package senac.sistemafidelidade.model;
+package senac.sistemafidelidade.domain.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -35,6 +35,10 @@ public class Usuario implements UserDetails {
     private String senha;
 
     private String role;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "empresa_id")
+    private Empresa empresa;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

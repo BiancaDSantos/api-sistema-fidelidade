@@ -1,4 +1,4 @@
-package senac.sistemafidelidade.controller;
+package senac.sistemafidelidade.infrastructure.adapters.primary.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,10 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
-import senac.sistemafidelidade.dto.LoginRequestDto;
-import senac.sistemafidelidade.dto.LoginResponseDTO;
-import senac.sistemafidelidade.service.TokenService;
-import senac.sistemafidelidade.service.UsuarioService;
+import senac.sistemafidelidade.infrastructure.adapters.primary.dto.LoginRequestDto;
+import senac.sistemafidelidade.infrastructure.adapters.primary.dto.LoginResponseDTO;
+import senac.sistemafidelidade.application.service.TokenService;
+import senac.sistemafidelidade.application.service.UsuarioService;
 
 @RestController
 @RequestMapping("/auth")

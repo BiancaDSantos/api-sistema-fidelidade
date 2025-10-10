@@ -1,7 +1,6 @@
-package senac.sistemafidelidade.dto;
+package senac.sistemafidelidade.infrastructure.adapters.primary.dto;
 
 import jakarta.validation.constraints.*;
-import senac.sistemafidelidade.model.ClienteFidelidade;
 
 import java.util.List;
 
@@ -16,13 +15,13 @@ public interface ClienteFidelidadeDTO {
             @NotBlank(message = "Email é obrigatório")
             String email,
 
-            @NotNull(message = "Pontos não podem ser nulos")
-            @PositiveOrZero(message = "Pontos devem ser maior ou igual a zero")
+            @NotNull(message = "Os pontos não podem ser nulos")
+            @PositiveOrZero(message = "Os pontos devem ser maior ou igual a zero")
             Integer pontos
 
     ) {
-        public ClienteFidelidade transformaEmModel() {
-            return ClienteFidelidade.builder()
+        public ContaFidelidade transformaEmModel() {
+            return ContaFidelidade.builder()
                     .nome(this.nome())
                     .email(this.email())
                     .pontos(this.pontos())
@@ -38,7 +37,7 @@ public interface ClienteFidelidadeDTO {
             Integer pontos
 
     ) {
-        public ClienteResponse(ClienteFidelidade clienteFidelidade) {
+        public ClienteResponse(ContaFidelidade clienteFidelidade) {
             this(
                     clienteFidelidade.getId(),
                     clienteFidelidade.getNome(),
@@ -47,7 +46,7 @@ public interface ClienteFidelidadeDTO {
             );
         }
 
-        public static List<ClienteResponse> geraListaDeResponse(List<ClienteFidelidade> clientes) {
+        public static List<ClienteResponse> geraListaDeResponse(List<ContaFidelidade> clientes) {
             return clientes.stream()
                     .map(ClienteResponse::new)
                     .toList();

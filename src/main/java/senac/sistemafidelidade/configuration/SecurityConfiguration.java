@@ -1,4 +1,4 @@
-package senac.sistemafidelidade.config;
+package senac.sistemafidelidade.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

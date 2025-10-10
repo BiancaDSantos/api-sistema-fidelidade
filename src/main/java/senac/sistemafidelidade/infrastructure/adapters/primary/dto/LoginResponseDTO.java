@@ -1,4 +1,4 @@
-package senac.sistemafidelidade.dto;
+package senac.sistemafidelidade.infrastructure.adapters.primary.dto;
 
 public record LoginResponseDTO(
         String token,

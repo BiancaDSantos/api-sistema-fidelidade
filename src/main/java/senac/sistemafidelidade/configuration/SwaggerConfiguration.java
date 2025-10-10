@@ -1,4 +1,4 @@
-package senac.sistemafidelidade.config;
+package senac.sistemafidelidade.configuration;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

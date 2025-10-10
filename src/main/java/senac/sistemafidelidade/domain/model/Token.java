@@ -1,4 +1,4 @@
-package senac.sistemafidelidade.model;
+package senac.sistemafidelidade.domain.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

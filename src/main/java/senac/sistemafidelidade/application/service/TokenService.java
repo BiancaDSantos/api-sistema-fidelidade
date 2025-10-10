@@ -1,4 +1,4 @@
-package senac.sistemafidelidade.service;
+package senac.sistemafidelidade.application.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -6,9 +6,9 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import senac.sistemafidelidade.model.Token;
-import senac.sistemafidelidade.model.Usuario;
-import senac.sistemafidelidade.repository.TokenRepository;
+import senac.sistemafidelidade.domain.model.Token;
+import senac.sistemafidelidade.domain.model.Usuario;
+import senac.sistemafidelidade.domain.repository.TokenRepository;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
