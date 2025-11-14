@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import senac.sistemafidelidade.application.service.ContaFidelidadeService;
 import senac.sistemafidelidade.infrastructure.adapters.primary.dto.ClienteFidelidadeDTO;
-import senac.sistemafidelidade.service.ClienteFidelidadeService;
 
 import java.util.List;
 
@@ -14,15 +14,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ContaFidelidadeController {
 
-    private final ClienteFidelidadeService clienteService;
+    private final ContaFidelidadeService contaFidelidadeService;
 
     @PostMapping
-    public ResponseEntity<ClienteFidelidadeDTO.CriarClienteRequest> criarCliente(
+    public ResponseEntity<ClienteFidelidadeDTO.ClienteResponse> criarCliente(
             @Valid @RequestBody ClienteFidelidadeDTO.CriarClienteRequest request
     ) {
         return ResponseEntity.ok(
                 new ClienteFidelidadeDTO.ClienteResponse(
-                        clienteService.criarCliente(request))
+                        contaFidelidadeService.criarCliente(request))
         );
     }
 
@@ -31,7 +31,7 @@ public class ContaFidelidadeController {
 
         List<ClienteFidelidadeDTO.ClienteResponse> clientes =
                 ClienteFidelidadeDTO.ClienteResponse
-                        .geraListaDeResponse(clienteService.listarClientes());
+                        .geraListaDeResponse(contaFidelidadeService.listarClientes());
 
         return ResponseEntity.ok(clientes);
     }
@@ -42,30 +42,7 @@ public class ContaFidelidadeController {
     ) {
         return ResponseEntity.ok(
                 new ClienteFidelidadeDTO.ClienteResponse(
-                        clienteService.buscarClientePorId(id))
+                        contaFidelidadeService.buscarClientePorId(id))
         );
     }
-
-    @PostMapping("/{id}/adicionar")
-    public ResponseEntity<ClienteFidelidadeDTO.ClienteResponse> adicionarPontos(
-            @PathVariable Long id,
-            @Valid @RequestBody ClienteFidelidadeDTO.OperacaoPontosRequest request
-    ) {
-        return ResponseEntity.ok(
-                new ClienteFidelidadeDTO.ClienteResponse(
-                        clienteService.adicionarPontos(id, request))
-        );
-    }
-
-    @PostMapping("/{id}/resgatar")
-    public ResponseEntity<ClienteFidelidadeDTO.ClienteResponse> resgatarPontos(
-            @PathVariable Long id,
-            @Valid @RequestBody ClienteFidelidadeDTO.OperacaoPontosRequest request
-    ) {
-        return ResponseEntity.ok(
-                new ClienteFidelidadeDTO.ClienteResponse(
-                        clienteService.resgatarPontos(id, request))
-        );
-    }
-
 }
