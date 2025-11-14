@@ -1,4 +1,4 @@
-package senac.sistemafidelidade.domain.model.enums;
+package senac.sistemafidelidade.domain.enums;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
