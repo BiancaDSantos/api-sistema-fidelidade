@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import senac.sistemafidelidade.domain.model.enums.TipoTransacao;
+import senac.sistemafidelidade.domain.enums.TipoTransacao;
 
 import java.time.Instant;
 
@@ -25,7 +25,7 @@ public class Transacao {
     private TipoTransacao tipoTransacao;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "contaFidelidade", nullable = false)
     private ContaFidelidade contaFidelidade;
 
     @Column(nullable = false)
@@ -35,6 +35,7 @@ public class Transacao {
     private String descricao;
 
     @Column(nullable = false)
+    @Builder.Default
     private Instant data = Instant.now();
 
 }
