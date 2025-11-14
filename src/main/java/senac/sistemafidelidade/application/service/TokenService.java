@@ -23,7 +23,7 @@ public class TokenService {
     @Autowired
     private TokenRepository tokenRepository;
 
-    private final String EMISSOR = "ControlaStock API";
+    private final String EMISSOR = "Fidelize+";
 
     public String gerarToken(Usuario usuario) {
         try {
