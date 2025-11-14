@@ -12,5 +12,10 @@ import java.util.Optional;
 public interface ContaFidelidadeRepository extends
         JpaRepository<ContaFidelidade, Long>
 {
-
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT c FROM ContaFidelidade c WHERE c.cliente.id = :clienteId AND c.empresa.id = :empresaId")
+    Optional<ContaFidelidade> findByClienteIdAndEmpresaIdForUpdate(
+            @Param("clienteId") Long clienteId,
+            @Param("empresaId") Long empresaId
+    );
 }
