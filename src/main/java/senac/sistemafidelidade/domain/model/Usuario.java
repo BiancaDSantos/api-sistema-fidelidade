@@ -5,10 +5,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import senac.sistemafidelidade.domain.enums.UserRoles;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Usuario implements UserDetails {
 
     @Id
@@ -34,7 +38,7 @@ public class Usuario implements UserDetails {
     @NotBlank(message = "A senha é obrigatória")
     private String senha;
 
-    private String role;
+    private UserRoles role;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id")
@@ -42,8 +46,9 @@ public class Usuario implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if ("ROLE_ADMIN".equals(this.role)) {
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),
+        if (this.role == UserRoles.ADMIN) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
                     new SimpleGrantedAuthority("ROLE_USER"));
         } else {
             return List.of(new SimpleGrantedAuthority("ROLE_USER"));
